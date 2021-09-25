@@ -45,28 +45,22 @@ public class EmpresaInovadora {
 				else
 					System.out.println("Cliente no registrado");
 				break;
-			case 4:
-				Maskilos(paquetes);
+			case 4:Maskilos(paquetes);
 				break;
-			case 5:
-				igualCosto(paquetes);
+			case 5:igualCosto(paquetes);
 				break;
-			case 6:
-				System.out.println("");
+			case 6:System.out.println("");
 				break;
-			case 7:
-				System.out.println("Ingrese N° de paquete:");
+			case 7:System.out.println("Ingrese N° de paquete:");
 				int num = sc.nextInt();
 				ingresoPaquete(paquetes[num - 1]);
 				break;
-			case 8:
-				System.out.println("Ingrese dni para buscar paquete:");
+			case 8:System.out.println("Ingrese dni para buscar paquete:");
 				int dnis = sc.nextInt();
 				datosxdni(dnis, paquetes);
 				break;
 
 			}
-            mostrar(paquetes);
 			System.out.println("\n" + "¿Desea seguir? si/no:");
 			confir = sc.next();
 			if (confir.equals("no")) {
@@ -177,11 +171,6 @@ public class EmpresaInovadora {
 				System.out.println(paquetes[i].datosPaquete());
 			}
 			if(paquetes[i]!=null);continue;
-		}
-	}
-	public static void mostrar(Paquete []paquetes) {
-		for(int i=0;paquetes[i]!=null;i++) {
-			System.out.println(paquetes[i].toString());
 		}
 	}
 }
