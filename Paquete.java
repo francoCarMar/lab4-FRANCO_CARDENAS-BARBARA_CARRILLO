@@ -1,6 +1,6 @@
-package laboratorio04;
 import java.util.*;
 public class Paquete {
+	
 	private int identificador;
 	private Date fechaEntrega;
 	private Date fechaRecepcion;
@@ -9,6 +9,9 @@ public class Paquete {
 	private int costo;
 	private Persona personaOrigen;
 	
+	public Paquete() {
+		
+	}
 	public Paquete(int identificador, Date fechaEntrega, Date fechaRecepcion, int peso, String direccion, int costo,
 			Persona personaOrigen) {
 		this.identificador = identificador;
@@ -19,6 +22,8 @@ public class Paquete {
 		this.costo = costo;
 		this.personaOrigen = personaOrigen;
 	}
+	
+
 	public int getIdentificador() {
 		return identificador;
 	}
@@ -43,10 +48,10 @@ public class Paquete {
 	public void setPeso(int peso) {
 		this.peso = peso;
 	}
-	public String getDirección() {
+	public String getDireccion() {
 		return direccion;
 	}
-	public void setDirección(String dirección) {
+	public void setDireccion(String dirección) {
 		this.direccion = dirección;
 	}
 	public int getCosto() {
@@ -61,19 +66,19 @@ public class Paquete {
 	public void setPersonaOrigen(Persona personaOrigen) {
 		this.personaOrigen = personaOrigen;
 	}
+	
 	public String datosPaquete() {
-		return identificador+" "+peso+" "+costo+" "+personaOrigen.getNombre();
+		return "Paquete N°:"+identificador+"\nPeso:"+peso+"kg"+"\nCosto:"+costo+"\nPersona:"+personaOrigen.getNombre()+"\nfecha de entrega:"+fechaEntrega+ "\nfecha recepcion:"+fechaRecepcion;
 	}
+	
 	public String datosDueño() {
 		return "Nombre:"+personaOrigen.getNombre()+"\nDNI:"+personaOrigen.getDni()+"\nCelular:"+personaOrigen.getCelular();
 	}
+	
 	public int datosDNI() {
 		return personaOrigen.getDni();
+	} 
+	public void RegDatosDNI(int dni) {
+		this.personaOrigen=new Persona(null,dni,0);
 	}
-	public String toString() {
-		return "Nombre:"+personaOrigen.getNombre()+"\nDNI:"+personaOrigen.getDni()+"\nCelular:"+personaOrigen.getCelular()
-		+fechaEntrega+"\n"+fechaRecepcion;
-		
-	}
-
 }

@@ -1,144 +1,167 @@
-package laboratorio04;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class EmpresaInovadora {
+public class EmpresaInnovadora {
 	public static Scanner sc = new Scanner(System.in);
 
 	public static void main(String[] args) throws ParseException {
-
 		Persona[] personas = new Persona[10];
 		Paquete[] paquetes = new Paquete[20];
 		String confir = "";
+		int opcion, dni;
 		int i = 0;
+		System.out.println("\t\tBIENVENIDO A EMPRESA INNOVADORA SAC");
 		do {
-			System.out.println("Elija una opcion: " + "n/Registra");
-			System.out.println("1. Realizar el registro de personas\r\n" + "2. Realizar el registro de paquetes\r\n"
-					+ "3. Registrar cuando el paquete ha sido entregado\r\n"
-					+ "4. Mostrar los paquetes que tengan más de cierta cantidad de kilos ingresado por el usuario.\r\n"
-					+ "5. Mostrar los paquetes que tengan el costo igual al ingresado por el usuario.\r\n"
-					+ "6. Mostrar los paquetes pendientes de ser enviados\r\n"
-					+ "7. Mostrar los datos de la persona al proporcionar un paquete.\r\n"
-					+ "8. Mostrar los datos de los paquetes al ingresar el dni de la persona.");
+			System.out.println("Elija una opción:");
+			System.out.println("(1) Realizar el registro de personas\r\n" + "(2) Realizar el registro de paquetes\r\n"
+					+ "(3) Registrar fecha de entrega del paquete\r\n"
+					+ "(4) Mostrar los paquetes que tengan más de cierta cantidad de kilos\r\n"
+					+ "(5) Mostrar los paquetes que tengan el costo igual ingresado\r\n"
+					+ "(6) Mostrar los paquetes pendientes de ser enviados\r\n"
+					+ "(7) Mostrar los datos de la persona al proporcionar un paquete\r\n"
+					+ "(8) Mostrar los datos de los paquetes al ingresar el dni de la persona");
+			opcion = sc.nextInt();
 
-			int opcion = sc.nextInt();
-			int dni, pos;
-			Date fecha;
 			switch (opcion) {
-			case 1: personas[i] = registroPersonas(i);
+			case 1:
+				personas[i] = regPersona(i);
 				break;
-			case 2: dni = ingDni();
-				paquetes[i] = ingPaq(i, personas, dni, paquetes);
-				pos = buscDniPer(personas, dni);
-				if (pos != -1)
-					paquetes[i].setPersonaOrigen(personas[pos]);
-				else
-					System.out.println("Cliente no registrado");
+			case 2:
+				dni = ingIden();
+				paquetes[i] = regPaquete(paquetes, opcion);
+				paquetes[i].RegDatosDNI(dni);
 				break;
-			case 3:dni = ingDni();
-				fecha = entregaF();
-				pos = buscDniPaq(paquetes, dni);
-				if (pos != -1)
-					paquetes[pos].setFechaRecepcion(fecha);
-				else
-					System.out.println("Cliente no registrado");
+			case 3:
+				dni = ingIden();
+				Date fechaRecepcion;
+				if (dniEnPaq(dni, paquetes)) {
+					fechaRecepcion = regFecha(opcion);
+					paquetes = añadirFechaApaq(paquetes, dni, fechaRecepcion);
+				} else
+					System.out.println("Paquete no registrado, debe registrar antes el paquete");
 				break;
-			case 4:Maskilos(paquetes);
+			case 4:
+				Maskilos(paquetes);
 				break;
-			case 5:igualCosto(paquetes);
+			case 5:
+				igualCosto(paquetes);
 				break;
-			case 6:System.out.println("");
+			case 6:
+				mostPendientes(paquetes);
 				break;
-			case 7:System.out.println("Ingrese N° de paquete:");
-				int num = sc.nextInt();
-				ingresoPaquete(paquetes[num - 1]);
+			case 7:
+				datosxPaquete(paquetes);
 				break;
-			case 8:System.out.println("Ingrese dni para buscar paquete:");
-				int dnis = sc.nextInt();
-				datosxdni(dnis, paquetes);
+			case 8:
+				dni = ingIden();
+				datosxdni(dni, paquetes);
 				break;
-
 			}
-			System.out.println("\n" + "¿Desea seguir? si/no:");
+			paquetes = añadirPerApaq(personas, paquetes);
+			System.out.println("Desea continuar? si/no");
 			confir = sc.next();
-			if (confir.equals("no")) {
-				System.out.println("------FIN------");
-			}
 			i++;
 		} while (confir.equals("si"));
+
 	}
 
-	public static Persona registroPersonas(int i) {
-		String nomb;
-		int dni, cel;
-		System.out.println("Ingrese datos " + (i + 1));
-		System.out.print("Nombre: ");
-		nomb = sc.next();
-		System.out.print("dni: ");
-		dni = sc.nextInt();
-		System.out.print("Celular: ");
-		cel = sc.nextInt();
-		Persona people = new Persona(nomb, dni, cel);
-		return people;
+	public static Persona regPersona(int i) {
+		System.out.println("Persona" + (i + 1));
+		System.out.print("Ingrese nombre:");
+		String nombre = sc.next();
+		System.out.print("Ingrese numero de dni:");
+		int dni = sc.nextInt();
+		System.out.print("Ingrese numero telefonico:");
+		int telef = sc.nextInt();
+		Persona persona = new Persona(nombre, dni, telef);
+		return persona;
 	}
 
-	public static int buscDniPaq(Paquete[] paquete, int dni) {
-		int pos = -1;
-		for (int i = 0; i < paquete.length; i++) {
-			if(paquete[i] == null)continue;
-			if (paquete[i].datosDNI() == dni) {
-				pos = i;
-			}
-		}
-		return pos;
-	}
-
-	public static int buscDniPer(Persona[] per, int dni) {
-		int pos = -1;
-		for (int i = 0; i < per.length; i++) {
-			if(per[i] == null)continue;
-			if (per[i].getDni() == dni) {
-				pos = i;
-			}
-		}
-		return pos;
-	}
-
-	public static Paquete ingPaq(int i, Persona[] personas, int dni, Paquete[] paquetes) throws ParseException {
-
-		int identificador = i + 1;
-		System.out.print("Ingrese fecha de entrega");
-		String fechaComoTexto = sc.next();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date fechaEntrega = sdf.parse(fechaComoTexto);
+	public static Paquete regPaquete(Paquete[] paquetes, int opcion) throws ParseException {
+		System.out.print("Ingrese Identificador:");
+		int identificador = sc.nextInt();
+		Date fechaEntrega = regFecha(opcion);
 		System.out.print("Ingrese direccion destino:");
 		String direccion = sc.next();
-		System.out.print("Ingrese peso");
+		System.out.print("Ingrese peso:");
 		int peso = sc.nextInt();
-		System.out.print("Ingrese costo");
+		System.out.print("Ingrese costo:");
 		int costo = sc.nextInt();
 		Date fechaRecepcion = null;
-
 		Paquete paq = new Paquete(identificador, fechaEntrega, fechaRecepcion, peso, direccion, costo, null);
 		return paq;
+
 	}
 
-	public static Date entregaF() throws ParseException {
-		System.out.print("Ingrese fecha de entrega");
+	public static Date regFecha(int opcion) throws ParseException {
+		if (opcion == 2)
+			System.out.print("Ingrese fecha de recepción:");
+		else
+			System.out.print("Ingrese fecha de entrega:");
 		String fechaComoTexto = sc.next();
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		Date fechaEntrega = sdf.parse(fechaComoTexto);
-		return fechaEntrega;
+		Date fecha = sdf.parse(fechaComoTexto);
+		return fecha;
+	}
+
+	public static int ingIden() {
+		System.out.print("Ingrese DNI:");
+		int dni = sc.nextInt();
+		return dni;
+	}
+
+	public static Paquete[] añadirPerApaq(Persona[] per, Paquete[] paquetes) {
+		for (int i = 0; i < per.length; i++) {
+			for (int j = 0; j < paquetes.length; j++) {
+				if (per[i] == null || paquetes[j] == null)
+					continue;
+				if (per[i].getDni() == paquetes[j].datosDNI()) {
+					paquetes[j].setPersonaOrigen(per[i]);
+				}
+			}
+		}
+		return paquetes;
+	}
+
+	public static Paquete[] añadirFechaApaq(Paquete[] paquetes, int dni, Date fecha) {
+		for (int i = 0; i < paquetes.length; i++) {
+			if (paquetes[i] == null)
+				continue;
+			if (paquetes[i].datosDNI() == dni)
+				paquetes[i].setFechaRecepcion(fecha);
+		}
+		return paquetes;
+	}
+
+	public static boolean dniEnPaq(int dni, Paquete[] paquetes) {
+		boolean confir = false;
+		for (Paquete i : paquetes) {
+			if (i == null)
+				continue;
+			if (i.datosDNI() == dni)
+				confir = true;
+		}
+		return confir;
+	}
+
+	public static void mosPaquetes(Paquete[] paquetes) {
+		for (Paquete i : paquetes) {
+			if (i == null)
+				continue;
+			else
+				System.out.println(i.datosPaquete());
+		}
 	}
 
 	public static void Maskilos(Paquete[] paquetes) {
-		System.out.println("Ingrese la cantidad de kilos");
+		System.out.print("Ingrese cantidad de kilos:");
 		double kg = sc.nextDouble();
-		System.out.println("Paquetes con más peso");
+		System.out.println("Paquetes con más peso:");
 		for (int i = 0; i < paquetes.length; i++) {
-			if (kg > paquetes[i].getPeso()) {
+			if (paquetes[i] == null)
+				continue;
+			if (paquetes[i].getPeso() > kg) {
 				System.out.println(paquetes[i].datosPaquete());
 			}
 		}
@@ -148,29 +171,44 @@ public class EmpresaInovadora {
 		System.out.println("Ingrese el costo:");
 		double costo = sc.nextDouble();
 		for (int i = 0; i < paquetes.length; i++) {
+			if (paquetes[i] == null)
+				continue;
 			if (costo == paquetes[i].getCosto()) {
 				System.out.println(paquetes[i].datosPaquete());
 			}
 		}
 	}
 
-	public static int ingDni() {
-		System.out.print("Ingrese dni del cliente:");
-		int dni = sc.nextInt();
-		return dni;
-	}
-
-	public static void ingresoPaquete(Paquete paquetes) {
-		System.out.println(paquetes.datosDueño());
+	public static void mostPendientes(Paquete[] paquetes) {
+		for (Paquete i : paquetes) {
+			if (i == null)
+				continue;
+			else if (i.getFechaRecepcion() == null) {
+				System.out.println(
+						"El paquete con identificador " + i.getIdentificador() + "\ndel cliente" + i.datosDueño());
+			}
+		}
 	}
 
 	public static void datosxdni(int dni, Paquete[] paquetes) {
-		for (int i = 0; paquetes[i]!=null&&i < paquetes.length; i++) {
-			
-			if (paquetes[i].datosDNI() == dni) {
-				System.out.println(paquetes[i].datosPaquete());
-			}
-			if(paquetes[i]!=null);continue;
+		for (Paquete i : paquetes) {
+			if (i == null)
+				continue;
+			if (i.datosDNI() == dni)
+				System.out.println(i.datosPaquete());
 		}
+	}
+
+	public static void datosxPaquete(Paquete[] paquetes) {
+		System.out.println("Ingrese N° identificador del paquete:");
+		int identif = sc.nextInt();
+		for (Paquete i : paquetes) {
+			if (i == null)
+				continue;
+			if (i.getIdentificador() == identif) {
+				System.out.println(i.datosDueño());
+			}
+		}
+
 	}
 }

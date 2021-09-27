@@ -1,9 +1,9 @@
-package laboratorio04;
 
 public class Persona {
 	private String nombre;
 	private int dni;
 	private int celular;
+	
 	
 	public String getNombre() {
 		return nombre;
@@ -30,9 +30,9 @@ public class Persona {
 	}
 
 	public Persona(String nombre, int dni, int celular) {
-		this.nombre = nombre;
-		this.dni = dni;
-		this.celular = celular;
+		this.setNombre(nombre);
+		this.setDni(dni);
+		this.setCelular(celular);
 	}
-	
+
 }
